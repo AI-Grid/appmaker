@@ -38,6 +38,18 @@ DEFAULT_RULE_SOURCE = (
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("APPMAKER_SECRET", "change-me")
+app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 0
+
+
+@app.after_request
+def disable_caching(response: Response) -> Response:
+    """Ensure browsers do not cache HTML or static assets aggressively."""
+
+    cache_directive = "no-store, no-cache, must-revalidate, max-age=0"
+    response.headers["Cache-Control"] = cache_directive
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    return response
 
 
 class RuleMonitor:
@@ -95,6 +107,24 @@ rule_monitor = RuleMonitor(
     DATA_PATH,
     os.environ.get("SDK_RULE_SOURCE", DEFAULT_RULE_SOURCE),
 )
+
+
+def static_file_version(filename: str) -> int:
+    """Return a cache-busting integer based on the static asset's mtime."""
+
+    static_path = APP_ROOT / "static" / filename
+    try:
+        return int(static_path.stat().st_mtime)
+    except FileNotFoundError:
+        return int(datetime.utcnow().timestamp())
+
+
+@app.context_processor
+def inject_static_url() -> Dict[str, object]:
+    def _static_url(filename: str) -> str:
+        return url_for("static", filename=filename, v=static_file_version(filename))
+
+    return {"static_url": _static_url}
 
 
 def validate_package_name(package_name: str) -> bool:
