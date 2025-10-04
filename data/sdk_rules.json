@@ -1,0 +1,13 @@
+{
+  "version": "2024.04",
+  "updated": "2024-04-10T12:00:00Z",
+  "notes": [
+    "This offline cache is bundled so AppMaker can start even without network access.",
+    "Use the Refresh rules button to download the latest Android policy manifest."
+  ],
+  "requirements": [
+    "Target API level 34 or above for new submissions.",
+    "Declare data safety information for WebView usage in Play Console.",
+    "Audit embedded web content for third-party cookies and trackers."
+  ]
+}
