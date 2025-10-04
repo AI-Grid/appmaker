@@ -1,0 +1,203 @@
+:root {
+    color-scheme: light dark;
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background: radial-gradient(circle at top left, #f5f7fa, #e4ecf7);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    color: #1f2933;
+}
+
+header, footer {
+    background: rgba(15, 23, 42, 0.85);
+    color: #f8fafc;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(15, 23, 42, 0.3);
+}
+
+header h1 {
+    margin: 0 0 0.5rem;
+    font-size: clamp(2.2rem, 4vw, 3rem);
+}
+
+main {
+    width: min(960px, 90%);
+    margin: -3rem auto 3rem;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    border-radius: 1.5rem;
+    padding: 2.5rem;
+    box-shadow: 0 30px 60px rgba(15, 23, 42, 0.15);
+}
+
+section + section {
+    margin-top: 2.5rem;
+}
+
+h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #0f172a;
+}
+
+.builder-form {
+    display: grid;
+    gap: 1.5rem;
+}
+
+label {
+    display: flex;
+    flex-direction: column;
+    font-weight: 600;
+    gap: 0.5rem;
+}
+
+input[type="text"],
+input[type="url"],
+input[type="password"],
+input[type="number"] {
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid rgba(15, 23, 42, 0.2);
+    background: rgba(255, 255, 255, 0.9);
+    font-size: 1rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.2);
+}
+
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+}
+
+button {
+    justify-self: start;
+    background: linear-gradient(135deg, #2563eb, #4f46e5);
+    color: #fff;
+    border: none;
+    padding: 0.9rem 1.8rem;
+    border-radius: 999px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 15px 30px rgba(79, 70, 229, 0.35);
+}
+
+button:active {
+    transform: translateY(1px);
+}
+
+.accent {
+    background: linear-gradient(135deg, #0ea5e9, #6366f1);
+}
+
+.signing {
+    background: rgba(15, 23, 42, 0.04);
+    border-radius: 1rem;
+    padding: 1.25rem 1.5rem;
+}
+
+.signing summary {
+    font-weight: 700;
+    cursor: pointer;
+    margin-bottom: 1rem;
+    outline: none;
+}
+
+.signing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.hint {
+    margin: 0;
+    color: rgba(15, 23, 42, 0.75);
+    font-size: 0.95rem;
+}
+
+.messages {
+    width: min(960px, 90%);
+    margin: 1.5rem auto 0;
+    display: grid;
+    gap: 0.75rem;
+}
+
+.message {
+    padding: 1rem 1.5rem;
+    border-radius: 0.75rem;
+    font-weight: 600;
+}
+
+.message.error {
+    background: rgba(248, 113, 113, 0.15);
+    color: #b91c1c;
+}
+
+.message.success {
+    background: rgba(74, 222, 128, 0.15);
+    color: #047857;
+}
+
+.rules, .notes {
+    background: rgba(241, 245, 249, 0.9);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.08);
+}
+
+.rules ul, .notes ul {
+    margin: 0;
+    padding-left: 1.25rem;
+}
+
+.last-update {
+    font-style: italic;
+    color: rgba(15, 23, 42, 0.8);
+}
+
+pre {
+    background: rgba(15, 23, 42, 0.9);
+    color: #f8fafc;
+    padding: 1rem 1.5rem;
+    border-radius: 0.75rem;
+    overflow-x: auto;
+}
+
+@media (max-width: 640px) {
+    main {
+        padding: 1.75rem;
+    }
+
+    header, footer {
+        padding: 1.5rem;
+    }
+
+    .signing-grid {
+        grid-template-columns: 1fr;
+    }
+
+    button {
+        width: 100%;
+        justify-self: stretch;
+    }
+}
