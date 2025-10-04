@@ -117,11 +117,13 @@ def create_project_files(
     start_url: str,
     rules: Dict[str, object],
     signing_config: Dict[str, str] | None = None,
+    rule_source: str | None = None,
 ) -> Dict[str, str]:
     files: Dict[str, str] = {}
     rules_summary = "\n".join(
         f"- {item}" for item in rules.get("requirements", [])
     ) or "- Stay informed by reviewing the Android developer blog regularly."
+    resolved_rule_source = rule_source or rule_monitor.remote_source
     class_base = sanitize_class_name(app_name)
     activity_class = f"{class_base}Activity"
 
@@ -402,6 +404,7 @@ from urllib.request import Request, urlopen
 
 REMOTE_SOURCE = os.environ.get(
     "SDK_RULE_SOURCE",
+    "{resolved_rule_source}",
     "{rule_monitor.remote_source}",
 )
 OUTPUT = Path(__file__).resolve().parents[1] / "android_rules.json"
@@ -459,6 +462,13 @@ fi
 
 def build_project_zip(app_name: str, package_name: str, start_url: str, rules: Dict[str, object]) -> io.BytesIO:
     """Create an Android project zip configured for the provided parameters."""
+    files = create_project_files(
+        app_name,
+        package_name,
+        start_url,
+        rules,
+        rule_source=rule_monitor.remote_source,
+    )
     files = create_project_files(app_name, package_name, start_url, rules)
     buffer = io.BytesIO()
     with zipfile.ZipFile(buffer, mode="w") as archive:
@@ -581,6 +591,14 @@ def generate_release_package(
         "key_password": signing_details["key_password"],
         "store_type": "pkcs12",
     }
+    files = create_project_files(
+        app_name,
+        package_name,
+        start_url,
+        rules,
+        signing_config=signing_config,
+        rule_source=rule_monitor.remote_source,
+    )
     files = create_project_files(app_name, package_name, start_url, rules, signing_config=signing_config)
     keystore_bytes, cert = create_release_keystore(
         signing_details["key_alias"],
