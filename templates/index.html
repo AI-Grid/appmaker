@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AppMaker WebView Studio</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+    <header>
+        <h1>AppMaker WebView Studio</h1>
+        <p>Create Android WebView shells that stay aligned with Google Play policies.</p>
+    </header>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="messages">
+                {% for category, message in messages %}
+                    <div class="message {{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <main>
+        <section class="builder">
+            <h2>1. Configure your WebView app</h2>
+            <form action="{{ url_for('generate') }}" method="post" class="builder-form">
+                <label>
+                    App name
+                    <input type="text" name="app_name" placeholder="My WebView App" required />
+                </label>
+                <label>
+                    Package name
+                    <input type="text" name="package_name" placeholder="com.example.webview" required />
+                    <small>Must follow Java package naming rules.</small>
+                </label>
+                <label>
+                    Launch URL
+                    <input type="url" name="start_url" placeholder="https://example.com" required />
+                </label>
+
+                <details class="signing">
+                    <summary>Advanced: signed release build (APK + AAB)</summary>
+                    <div class="signing-grid">
+                        <label>
+                            Keystore password
+                            <input type="password" name="keystore_password" placeholder="Required for signing" />
+                        </label>
+                        <label>
+                            Key password
+                            <input type="password" name="key_password" placeholder="Defaults to keystore password" />
+                        </label>
+                        <label>
+                            Key alias
+                            <input type="text" name="key_alias" placeholder="release" />
+                        </label>
+                        <label>
+                            Certificate common name
+                            <input type="text" name="signing_common_name" placeholder="My WebView App" />
+                        </label>
+                        <label>
+                            Organization (optional)
+                            <input type="text" name="signing_organization" placeholder="Example LLC" />
+                        </label>
+                        <label>
+                            Country code (ISO)
+                            <input type="text" name="signing_country" placeholder="US" maxlength="2" />
+                        </label>
+                        <label>
+                            Certificate validity (days)
+                            <input type="number" name="signing_validity" value="3650" min="1" />
+                        </label>
+                    </div>
+                    <p class="hint">Provide signing info to bundle a keystore, certificate summary, and build outputs ready for Play Store upload.</p>
+                </details>
+
+                <div class="actions">
+                    <button type="submit" class="primary">Generate Android project</button>
+                    <button type="submit" class="accent" formaction="{{ url_for('generate_release') }}">Build signed release package</button>
+                </div>
+            </form>
+        </section>
+
+        <section class="updates">
+            <h2>2. Keep up with Google Play SDK rules</h2>
+            <p class="last-update">Last synced: {{ rules.updated or 'unknown' }} (version {{ rules.version or 'n/a' }})</p>
+            <form action="{{ url_for('refresh_rules') }}" method="post">
+                <button type="submit">Refresh rules from Google</button>
+            </form>
+            <div class="rules">
+                <h3>Current requirements</h3>
+                {% if rules.requirements %}
+                    <ul>
+                        {% for item in rules.requirements %}
+                            <li>{{ item }}</li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>No requirements loaded yet. Run the refresh button to update or configure <code>SDK_RULE_SOURCE</code>.</p>
+                {% endif %}
+            </div>
+            {% if rules.notes %}
+                <div class="notes">
+                    <h3>Notes</h3>
+                    <ul>
+                        {% for item in rules.notes %}
+                            <li>{{ item }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        </section>
+
+        <section class="api">
+            <h2>3. Automate your pipeline</h2>
+            <p>Use the <code>/api/sdk-rules</code> endpoint to programmatically check for updates and trigger builds.</p>
+            <pre><code>curl {{ request.host_url }}api/sdk-rules</code></pre>
+        </section>
+    </main>
+
+    <footer>
+        <p>Generated project includes an updater script so you can stay compliant when Google updates their SDK requirements.</p>
+    </footer>
+</body>
+</html>
