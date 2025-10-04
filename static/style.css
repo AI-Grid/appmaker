@@ -16,6 +16,8 @@
     --accent-yellow-dark: #f59e0b;
     --accent-red: #ef4444;
     --accent-red-dark: #b91c1c;
+    color-scheme: light dark;
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 body {
@@ -67,6 +69,19 @@ footer::after {
     height: 3px;
     background: linear-gradient(90deg, rgba(250, 204, 21, 0.8), rgba(239, 68, 68, 0.9));
     opacity: 0.6;
+    background: radial-gradient(circle at top left, #f5f7fa, #e4ecf7);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    color: #1f2933;
+}
+
+header, footer {
+    background: rgba(15, 23, 42, 0.85);
+    color: #f8fafc;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(15, 23, 42, 0.3);
 }
 
 header h1 {
@@ -103,6 +118,18 @@ main::before {
 
 section + section {
     margin-top: 2.75rem;
+main {
+    width: min(960px, 90%);
+    margin: -3rem auto 3rem;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    border-radius: 1.5rem;
+    padding: 2.5rem;
+    box-shadow: 0 30px 60px rgba(15, 23, 42, 0.15);
+}
+
+section + section {
+    margin-top: 2.5rem;
 }
 
 h2 {
@@ -114,6 +141,8 @@ h2 {
 
 h3 {
     color: var(--text-muted);
+    margin-bottom: 1rem;
+    color: #0f172a;
 }
 
 .builder-form {
@@ -150,12 +179,20 @@ input[type="number"] {
 
 input::placeholder {
     color: rgba(248, 245, 215, 0.4);
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid rgba(15, 23, 42, 0.2);
+    background: rgba(255, 255, 255, 0.9);
+    font-size: 1rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 input:focus {
     outline: none;
     border-color: var(--accent-yellow);
     box-shadow: 0 0 0 4px var(--glow-yellow);
+    border-color: #2563eb;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.2);
 }
 
 .actions {
@@ -169,6 +206,10 @@ button {
     justify-self: start;
     border: none;
     padding: 0.95rem 1.9rem;
+    background: linear-gradient(135deg, #2563eb, #4f46e5);
+    color: #fff;
+    border: none;
+    padding: 0.9rem 1.8rem;
     border-radius: 999px;
     font-size: 1rem;
     font-weight: 700;
@@ -188,11 +229,13 @@ button.accent {
     background: linear-gradient(135deg, var(--accent-red), var(--accent-red-dark));
     color: #fff7ed;
     box-shadow: 0 16px 32px var(--glow-red);
+    transition: transform 0.15s ease, box-shadow 0.2s ease;
 }
 
 button:hover {
     transform: translateY(-1px);
     filter: brightness(1.05);
+    box-shadow: 0 15px 30px rgba(79, 70, 229, 0.35);
 }
 
 button:active {
@@ -204,6 +247,14 @@ button:active {
     border-radius: 1rem;
     padding: 1.25rem 1.5rem;
     border: 1px solid var(--stroke-soft);
+.accent {
+    background: linear-gradient(135deg, #0ea5e9, #6366f1);
+}
+
+.signing {
+    background: rgba(15, 23, 42, 0.04);
+    border-radius: 1rem;
+    padding: 1.25rem 1.5rem;
 }
 
 .signing summary {
@@ -261,6 +312,14 @@ pre {
 
 .messages {
     width: min(960px, 92%);
+.hint {
+    margin: 0;
+    color: rgba(15, 23, 42, 0.75);
+    font-size: 0.95rem;
+}
+
+.messages {
+    width: min(960px, 90%);
     margin: 1.5rem auto 0;
     display: grid;
     gap: 0.75rem;
@@ -299,10 +358,61 @@ pre {
     .actions {
         flex-direction: column;
         align-items: stretch;
+    border-radius: 0.75rem;
+    font-weight: 600;
+}
+
+.message.error {
+    background: rgba(248, 113, 113, 0.15);
+    color: #b91c1c;
+}
+
+.message.success {
+    background: rgba(74, 222, 128, 0.15);
+    color: #047857;
+}
+
+.rules, .notes {
+    background: rgba(241, 245, 249, 0.9);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.08);
+}
+
+.rules ul, .notes ul {
+    margin: 0;
+    padding-left: 1.25rem;
+}
+
+.last-update {
+    font-style: italic;
+    color: rgba(15, 23, 42, 0.8);
+}
+
+pre {
+    background: rgba(15, 23, 42, 0.9);
+    color: #f8fafc;
+    padding: 1rem 1.5rem;
+    border-radius: 0.75rem;
+    overflow-x: auto;
+}
+
+@media (max-width: 640px) {
+    main {
+        padding: 1.75rem;
+    }
+
+    header, footer {
+        padding: 1.5rem;
+    }
+
+    .signing-grid {
+        grid-template-columns: 1fr;
     }
 
     button {
         width: 100%;
         text-align: center;
+        justify-self: stretch;
     }
 }

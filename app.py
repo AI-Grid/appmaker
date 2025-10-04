@@ -435,6 +435,7 @@ from urllib.request import Request, urlopen
 REMOTE_SOURCE = os.environ.get(
     "SDK_RULE_SOURCE",
     "{resolved_rule_source}",
+    "{rule_monitor.remote_source}",
 )
 OUTPUT = Path(__file__).resolve().parents[1] / "android_rules.json"
 
@@ -498,6 +499,7 @@ def build_project_zip(app_name: str, package_name: str, start_url: str, rules: D
         rules,
         rule_source=rule_monitor.remote_source,
     )
+    files = create_project_files(app_name, package_name, start_url, rules)
     buffer = io.BytesIO()
     with zipfile.ZipFile(buffer, mode="w") as archive:
         for path, content in files.items():
@@ -627,6 +629,7 @@ def generate_release_package(
         signing_config=signing_config,
         rule_source=rule_monitor.remote_source,
     )
+    files = create_project_files(app_name, package_name, start_url, rules, signing_config=signing_config)
     keystore_bytes, cert = create_release_keystore(
         signing_details["key_alias"],
         signing_details["store_password"],
