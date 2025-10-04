@@ -38,7 +38,6 @@ DEFAULT_RULE_SOURCE = (
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("APPMAKER_SECRET", "change-me")
-app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 0
 
 
 class RuleMonitor:
@@ -96,24 +95,6 @@ rule_monitor = RuleMonitor(
     DATA_PATH,
     os.environ.get("SDK_RULE_SOURCE", DEFAULT_RULE_SOURCE),
 )
-
-
-def static_file_version(filename: str) -> int:
-    """Return a cache-busting integer based on the static asset's mtime."""
-
-    static_path = APP_ROOT / "static" / filename
-    try:
-        return int(static_path.stat().st_mtime)
-    except FileNotFoundError:
-        return int(datetime.utcnow().timestamp())
-
-
-@app.context_processor
-def inject_static_url() -> Dict[str, object]:
-    def _static_url(filename: str) -> str:
-        return url_for("static", filename=filename, v=static_file_version(filename))
-
-    return {"static_url": _static_url}
 
 
 def validate_package_name(package_name: str) -> bool:
@@ -424,6 +405,7 @@ from urllib.request import Request, urlopen
 REMOTE_SOURCE = os.environ.get(
     "SDK_RULE_SOURCE",
     "{resolved_rule_source}",
+    "{rule_monitor.remote_source}",
 )
 OUTPUT = Path(__file__).resolve().parents[1] / "android_rules.json"
 
@@ -487,6 +469,7 @@ def build_project_zip(app_name: str, package_name: str, start_url: str, rules: D
         rules,
         rule_source=rule_monitor.remote_source,
     )
+    files = create_project_files(app_name, package_name, start_url, rules)
     buffer = io.BytesIO()
     with zipfile.ZipFile(buffer, mode="w") as archive:
         for path, content in files.items():
@@ -616,6 +599,7 @@ def generate_release_package(
         signing_config=signing_config,
         rule_source=rule_monitor.remote_source,
     )
+    files = create_project_files(app_name, package_name, start_url, rules, signing_config=signing_config)
     keystore_bytes, cert = create_release_keystore(
         signing_details["key_alias"],
         signing_details["store_password"],
